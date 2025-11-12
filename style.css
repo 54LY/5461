@@ -1,0 +1,94 @@
+body {
+    margin: 0;
+    font-family: "Microsoft YaHei", sans-serif;
+    background-color: #f8f9fa;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #1f1f1f;
+    color: white;
+    padding: 10px 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: auto;
+}
+
+nav .logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00bfff;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    color: #00bfff;
+}
+
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+    background: linear-gradient(120deg, #00bfff, #00d4ff);
+    color: white;
+}
+
+.hero h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.hero button {
+    background-color: white;
+    color: #00bfff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.hero button:hover {
+    background-color: #e0f7ff;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #1f1f1f;
+    color: white;
+}
+
+/* 响应式设计：当屏幕小于768px时（如手机）应用此样式 */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    .hero {
+        padding: 50px 10px;
+    }
+    .hero h1 {
+        font-size: 22px;
+    }
+}
