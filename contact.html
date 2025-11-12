@@ -1,1 +1,37 @@
-<meta name="description" content="个人网站描述">
+<!DOCTYPE html> 
+<html lang="zh-CN"> 
+<head> 
+	<meta charset="UTF-8"> 
+	<title>联系我 - MySite</title> 
+	<link rel="stylesheet" href="style.css"> 
+</head> 
+
+<body> 
+	<header> 
+		<nav> 
+			<div class="logo">MySite</div> 
+			<ul> 
+			<li>
+				<a href="index.html">首页</a></li> 
+				<li><a href="about.html">关于我</a></li> 
+				<li><a href="contact.html" class="active">联系</a></li> 
+			</ul> 
+		</nav> 
+	</header> 
+	
+	<section class="content"> 
+		<h2>联系我</h2> 
+		<form id="contactForm"> 
+			<input type="text" id="name" placeholder="你的名字" required> 
+			<input type="email" id="email" placeholder="邮箱地址" required> 
+			<textarea id="message" placeholder="留言内容" required></textarea> 
+			<button type="submit">发送</button> 
+		</form> 
+	</section> 
+	
+	<footer> 
+		<p>© 2025 MySite 版权所有</p> 
+	</footer> 
+	<script> document.getElementById("contactForm").addEventListener("submit", (e) => { e.preventDefault(); alert("感谢留言，我们会尽快回复！"); e.target.reset(); }); </script> 
+</body> 
+</html>
