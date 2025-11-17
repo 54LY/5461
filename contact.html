@@ -2,37 +2,50 @@
 <html lang="zh-CN"> 
 <head> 
 	<meta charset="UTF-8"> 
-	<title>联系我 - MySite</title> 
+	<title>留言板 - 我的个人小站</title> 
 	<link rel="stylesheet" href="style.css"> 
 </head> 
+
 <body> 
 	<header> 
 		<nav> 
-			<div class="logo">MySite</div> 
+			<div class="logo">我的空间</div> 
 			<ul> 
 			<li>
 				<a href="index.html">首页</a></li> 
 				<li><a href="about.html">关于我</a></li> 
-				<li><a href="contact.html" class="active">联系</a></li> 
+				<li><a href="contact.html" class="active">留言板</a></li> 
 			</ul> 
 		</nav> 
 	</header> 
 	
-	<section class="content"> 
-		<h2>联系我</h2> 
-		<form id="contactForm"> 
-			<input type="text" id="name" placeholder="你的名字" required> 
-			<input type="email" id="email" placeholder="邮箱地址" required> 
-			<textarea id="message" placeholder="留言内容" required></textarea> 
-			<button type="submit">发送</button> 
-		</form> 
-	</section> 
+
+    <div class="message-form">
+        <h3>发表留言</h3>
+        <form id="messageForm">
+            <input type="text" id="author" placeholder="您的姓名（可选）">
+            <textarea id="content" placeholder="留言内容" rows="4" required></textarea>
+            <button type="submit">发布留言</button>
+            <!--
+			<button type="button" id="loadBtn">加载留言</button>  
+			-->
+        </form>
+        <div id="status"></div>
+		<!--
+        <div id="debugInfo" class="debug-info"></div>
+		-->
+    </div>
+	
+    <div class="message-list">
+        <h3>留言列表</h3>
+        <div id="messagesContainer"></div>
+    </div>
+	
 	<footer> 
 		<p>© 2025 我的个人空间. 保留所有权利。</p> 
 	</footer> 
-	<script> document.getElementById("contactForm").addEventListener("submit", (e) => { e.preventDefault(); alert("感谢留言，我们会尽快回复！"); e.target.reset(); }); </script> 
+
+
+	<script src="script.js"></script>
 </body> 
 </html>
-
-
-
