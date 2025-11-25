@@ -59,10 +59,10 @@ nav ul li a.active {
     background-color: white;
     color: #00bfff;
     border: none;
-    padding: 12px 25px;
+    padding: 3px 3px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     margin-top: 20px;
     transition: background-color 0.3s;
 }
@@ -111,6 +111,19 @@ footer {
 	border-radius: 4px;
 	box-sizing: border-box;
 }
+.message-form textarea {
+	min-height: 100px;
+	resize: vertical;
+}
+        .file-upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 1px;
+            text-align: center;
+            margin: 15px 0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
 .message-form button {
 	background: #007bff;
 	color: white;
@@ -149,3 +162,44 @@ footer {
 	border-radius: 8px;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
+
+
+.file-preview {
+	display: none;
+	background: #f8f9fa;
+	padding: 15px;
+	border-radius: 6px;
+	margin-bottom: 15px;
+	border-left: 4px solid #3498db;
+}
+.file-info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.file-details {
+	display: flex;
+	align-items: center;
+}
+.file-icon {
+	font-size: 24px;
+	margin-right: 10px;
+}
+.remove-file {
+	color: #e74c3c;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+.remove-file:hover {
+	background: #e74c3c;
+	color: white;
+}	
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
