@@ -412,17 +412,24 @@
             
             // 防御塔属性
             const TOWER_TYPES = {
-                1: { name: '箭塔', cost: 20, range: 120, damage: 10, fireRate: 1000, color: '#4cc9f0' },
-                2: { name: '加农炮', cost: 40, range: 100, damage: 25, fireRate: 2000, color: '#ffa94d' },
-                3: { name: '魔法塔', cost: 60, range: 140, damage: 15, fireRate: 1500, color: '#ff6b6b' },
-                4: { name: '激光塔', cost: 80, range: 160, damage: 30, fireRate: 3000, color: '#51cf66' }
+                1: { name: '箭塔' , cost: 20, range: 120, damage: 10, fireRate: 1000, color: '#4cc9f0' },
+                2: { name: '加农炮', cost: 40, range: 100, damage: 20, fireRate: 1500, color: '#ffa94d' },
+                3: { name: '魔法塔', cost: 60, range: 140, damage: 25, fireRate: 1800, color: '#ff6b6b' },
+                4: { name: '激光塔', cost: 80, range: 160, damage: 35, fireRate: 2500, color: '#51cf66' }
             };
             
             // 敌人属性
             const ENEMY_TYPES = {
-                1: { health: 50, speed: 1, reward: 10, color: '#ff5252' },
+                1: { health:  50, speed: 0.9, reward: 10, color: '#ac992f' },
                 2: { health: 100, speed: 0.8, reward: 20, color: '#ff793f' },
-                3: { health: 150, speed: 0.6, reward: 30, color: '#ffb142' }
+                3: { health: 150, speed: 0.6, reward: 25, color: '#ffc142' },
+				4: { health: 250, speed: 0.7, reward: 30, color: '#ffd142' },
+				5: { health: 350, speed: 0.8, reward: 35, color: '#ffe142' },
+				6: { health: 400, speed: 0.9, reward: 35, color: '#fff142' },
+				7: { health: 450, speed: 1.0, reward: 35, color: '#fff142' },
+				8: { health: 450, speed: 1.0, reward: 35, color: '#fff142' },
+				9: { health: 500, speed: 1.2, reward: 35, color: '#fff142' },
+				10:{ health: 650, speed: 1.5, reward: 35, color: '#ff5252' }
             };
             
             // DOM 元素
@@ -740,7 +747,7 @@
                 
                 if (timestamp - gameState.lastSpawn > 1000) {
                     // 生成敌人
-                    const enemyType = Math.min(gameState.wave, 3);
+                    const enemyType = Math.min(gameState.wave, 10);
                     const cellSize = Math.min(canvas.width, canvas.height) / GRID_SIZE;
                     
                     gameState.enemies.push({
