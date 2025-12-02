@@ -342,7 +342,7 @@
                 <div class="tower-option tower-2" data-type="2" data-cost="40">
                     <div class="tower-icon">C</div>
                     <div class="tower-name">加农炮</div>
-                    <div class="tower-cost">$40</div>
+                    <div class="tower-cost">$45</div>
                 </div>
                 <div class="tower-option tower-3" data-type="3" data-cost="60">
                     <div class="tower-icon">M</div>
@@ -352,7 +352,7 @@
                 <div class="tower-option tower-4" data-type="4" data-cost="80">
                     <div class="tower-icon">L</div>
                     <div class="tower-name">激光塔</div>
-                    <div class="tower-cost">$80</div>
+                    <div class="tower-cost">$100</div>
                 </div>
             </div>
         </div>
@@ -421,15 +421,15 @@
             // 敌人属性
             const ENEMY_TYPES = {
                 1: { health:  50, speed: 0.9, reward: 10, color: '#ac992f' },
-                2: { health: 100, speed: 0.8, reward: 20, color: '#ff793f' },
+                2: { health: 100, speed: 0.7, reward: 20, color: '#ff793f' },
                 3: { health: 150, speed: 0.6, reward: 20, color: '#ffc142' },
-				4: { health: 250, speed: 0.7, reward: 25, color: '#ffd142' },
-				5: { health: 350, speed: 0.8, reward: 30, color: '#ffe142' },
-				6: { health: 400, speed: 0.9, reward: 35, color: '#fff142' },
-				7: { health: 450, speed: 1.0, reward: 35, color: '#fff142' },
-				8: { health: 500, speed: 1.1, reward: 35, color: '#fff142' },
-				9: { health: 600, speed: 1.2, reward: 35, color: '#fff142' },
-				10:{ health: 700, speed: 1.6, reward: 35, color: '#ff5252' }
+				4: { health: 250, speed: 0.7, reward: 20, color: '#ffd142' },
+				5: { health: 300, speed: 0.8, reward: 25, color: '#ffe142' },
+				6: { health: 400, speed: 0.9, reward: 25, color: '#fff142' },
+				7: { health: 450, speed: 1.0, reward: 25, color: '#fff142' },
+				8: { health: 500, speed: 1.0, reward: 25, color: '#fff142' },
+				9: { health: 600, speed: 1.0, reward: 25, color: '#fff142' },
+				10:{ health: 700, speed: 1.4, reward: 25, color: '#ff5252' }
             };
             
             // DOM 元素
@@ -753,9 +753,9 @@
                     gameState.enemies.push({
                         x: ENEMY_PATH[0].x * cellSize + cellSize / 2,
                         y: ENEMY_PATH[0].y * cellSize + cellSize / 2,
-                        health: ENEMY_TYPES[enemyType].health,
-                        maxHealth: ENEMY_TYPES[enemyType].health,
-                        speed: ENEMY_TYPES[enemyType].speed,
+                        health: ENEMY_TYPES[enemyType].health + gameState.wave*10,
+                        maxHealth: ENEMY_TYPES[enemyType].health + gameState.wave*10,
+                        speed: ENEMY_TYPES[enemyType].speed + gameState.wave*0.05,
                         reward: ENEMY_TYPES[enemyType].reward,
                         color: ENEMY_TYPES[enemyType].color,
                         pathIndex: 1
