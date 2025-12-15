@@ -9,7 +9,7 @@ document.getElementById("bt1")
 document.getElementById("bt2")
 	?.addEventListener("click", function()
 	{
-		alert('Win+R回车后，输入如下指令：reg add "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings" /v FlightSettingsMaxPauseDays /t reg_dword /d 10000 /f');
+		alert('Win+R回车后，输入如下指令；然后windows暂停更新中，选择下拉菜单到最下面。：reg add "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings" /v FlightSettingsMaxPauseDays /t reg_dword /d 10000 /f');
 	}
 					);
 					
