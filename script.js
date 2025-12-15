@@ -1,13 +1,20 @@
-// 为首页的“了解更多”按钮添加点击事件
+// 为index.html中的button按钮添加点击事件
 document.getElementById("bt1")
 	?.addEventListener("click", function()
 	{
-		alert("账号：55544159523，密码：854524");
+		alert("账号：55544159523，密码：854524");  // 1，""或者''都可以引用内容。  2，"\"为转义字符，显示"\"时，需要写成"\\"
 	}
-					);					
-				
-
-
+					);	
+					
+document.getElementById("bt2")
+	?.addEventListener("click", function()
+	{
+		alert('Win+R回车后，输入如下指令：reg add "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings" /v FlightSettingsMaxPauseDays /t reg_dword /d 10000 /f');
+	}
+					);
+					
+					
+					
 // ----------------- 留言板相关 ----------------- //
 // 配置信息（https://jsonbin.io/app/bins）
         const JSONBIN_BASE_URL = 'https://api.jsonbin.io/v3/b';
