@@ -12,6 +12,13 @@ document.getElementById("bt2")
 		alert('Win+R回车后，输入如下指令；然后windows暂停更新中，选择下拉菜单到最下面。：reg add "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings" /v FlightSettingsMaxPauseDays /t reg_dword /d 10000 /f');
 	}
 					);
+
+document.getElementById("bt3")
+	?.addEventListener("click", function()
+	{
+		alert("例如:3GPP 38.协议下载 FTP中,38.201文件夹，点进去，显示各版本的38.201协议，后缀的f00表示r15版第1稿；以此类推，后缀h00表示r17版第一稿；后缀j00表示r19版第一稿。")
+	}
+					);
 					
 					
 					
