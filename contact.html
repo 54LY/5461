@@ -32,66 +32,77 @@
 		</nav> 
 	</header> 
 	
-        <div class="message-form">
-            <div class="form-container">
-                <h2><i class="fas fa-edit"></i> 发布留言</h2>
+    <!--<div class="container">-->
+        <div class="main-content">
+            <section class="form-section">
+                <h2>发布留言</h2>
                 <form id="messageForm">
                     <div class="form-group">
-                        <label for="author"><i class="fas fa-user"></i> 您的姓名（可选）</label>
-                        <input type="text" id="author" placeholder="输入您的姓名">
+                        <label for="author">您的姓名 *</label>
+                        <input type="text" id="author" required placeholder="请输入您的姓名">
+                    </div>
+					
+                    <!--
+                    <div class="form-group">
+                        <label for="email">邮箱地址</label>
+                        <input type="email" id="email" placeholder="可选，用于接收回复通知">
+                    </div>
+                    -->
+					
+                    <div class="form-group">
+                        <label for="message">留言内容 *</label>
+                        <textarea id="message" required placeholder="请输入您的留言内容..."></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="content"><i class="fas fa-comment"></i> 留言内容 *</label>
-                        <textarea id="content" placeholder="请输入您的留言内容" rows="4" required></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label><i class="fas fa-file-upload"></i> 上传文件（可选）</label>
-                        <div class="file-upload-area" id="fileUploadArea">
-                            <p><i class="fas fa-cloud-upload-alt"></i> 点击选择文件或拖拽文件到这里</p>
-                            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">支持图片、文档等文件（最大100KB）</p>
+                        <label>上传文件（可选）</label>
+                        <div class="file-upload" id="fileUploadArea">
+                            <p>📁 点击选择文件或拖拽文件到这里</p>
+                            <p style="font-size: 0.9rem; opacity: 0.7;">支持图片、文档等文件（最大25MB）</p>
                             <input type="file" id="fileInput" style="display: none;">
                         </div>
                         
                         <div class="file-preview" id="filePreview">
                             <div class="file-info">
-                                <div class="file-details">
-                                    <span class="file-icon" id="fileIcon"><i class="fas fa-file"></i></span>
-                                    <div>
-                                        <div id="fileName">文件名</div>
-                                        <div id="fileSize" class="file-size">文件大小</div>
-                                    </div>
-                                </div>
-                                <span class="remove-file" id="removeFile"><i class="fas fa-times"></i> 移除</span>
+                                <span id="fileName">文件名</span>
+                                <span id="fileSize" style="font-size: 0.9rem; opacity: 0.7;"></span>
+                                <button type="button" onclick="clearFileSelection()" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">移除</button>
                             </div>
                         </div>
                     </div>
                     
                     <div id="status"></div>
                     
-                    <div class="button-group">
-                        <button type="submit" class="btn btn-success" id="submitBtn">
-                            <i class="fas fa-paper-plane"></i> 发布留言
-                        </button>
-                    </div>
+                    <button type="submit" class="btn btn-success" id="submitBtn">
+                        发布留言
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="loadMessages()">
+                        刷新留言
+                    </button>
                 </form>
-                
-                <div class="debug-info" id="debugInfo" style="display: none;"></div>
-            </div>
+            </section>
             
-            <div class="messages-container">
-                <h2><i class="fas fa-list"></i> 留言列表</h2>
-                <div id="messagesContainer" class="empty-state">
-                    <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                    <p>暂无留言，请发布第一条留言</p>
+            <section class="messages-section">
+                <h2>留言列表</h2>
+                <div id="messagesContainer">
+                    <div class="status info">正在加载留言...</div>
                 </div>
-
-                
-
-				
-            </div>
+            </section>
         </div>
+        
+        <section class="config-section">
+            <details>
+                <summary>GitHub配置说明</summary>
+                <p>此留言板使用GitHub作为后端存储：</p>
+                <ul>
+                    <li>留言数据存储在GitHub Issues中</li>
+                    <li>上传的文件存储在GitHub仓库中</li>
+                    <li>需要配置GitHub Personal Access Token</li>
+                </ul>
+                <p class="github-info">确保您的GitHub仓库已启用Issues功能，并且Token具有相应权限。</p>
+            </details>
+        </section>
+    <!--</div>-->
 
 	
 	<footer> 
