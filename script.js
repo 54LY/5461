@@ -494,7 +494,7 @@ window.onload = loadMessagesFromOnline;
 const GITHUB_CONFIG = {
 	owner: '54LY',
 	repo: '5461',
-	token: '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'
+	token: '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'
 };
 
 // 全局变量
