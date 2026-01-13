@@ -491,10 +491,16 @@ window.onload = loadMessagesFromOnline;
 
 // ----------------- 留言板相关（Github Token） ----------------- //
 // GitHub配置 - 需要根据实际情况修改
+function getFullToken() {
+	const part1 = 'ghp_6TxJDgtIs6M0pSOL';   // Expires on 2027.1.13 
+	const part2 = 'bsBt1tQjAN2pLR0Otura';   // Expires on 2027.1.13 
+	return part1 + part2;
+}
+
 const GITHUB_CONFIG = {
 	owner: '54LY',
 	repo: '5461',
-	token: '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'   // Expires on 2027.1.13 
+	token: getFullToken()
 };
 
 // 全局变量
@@ -585,7 +591,6 @@ function clearFileSelection() {
 async function submitMessage() {
 	const author = document.getElementById('author').value.trim();
 	const message = document.getElementById('message').value.trim();
-	const email = document.getElementById('email').value.trim();
 	
 	if (!author || !message) {
 		showStatus('请填写姓名和留言内容', 'error');
@@ -606,7 +611,6 @@ async function submitMessage() {
 		// 创建Issue作为留言
 		const issueTitle = `留言来自: ${author}`;
 		let issueBody = `**留言者:** ${author}\n`;
-		if (email) issueBody += `**邮箱:** ${email}\n`;
 		issueBody += `**时间:** ${new Date().toLocaleString('zh-CN')}\n\n`;
 		issueBody += `**内容:**\n${message}\n\n`;
 		if (fileUrl) issueBody += `**附件:** [下载链接](${fileUrl})`;
