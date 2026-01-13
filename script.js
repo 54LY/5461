@@ -494,7 +494,7 @@ window.onload = loadMessagesFromOnline;
 const GITHUB_CONFIG = {
 	owner: '54LY',
 	repo: '5461',
-	testtoken: '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'
+	token: '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'   // Expires on 2027.1.13 
 };
 
 // 全局变量
@@ -614,7 +614,7 @@ async function submitMessage() {
 		const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/issues`, {
 			method: 'POST',
 			headers: {
-				'Authorization': `token ${GITHUB_CONFIG.testtoken}`,
+				'Authorization': `token ${GITHUB_CONFIG.token}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
@@ -649,7 +649,7 @@ async function uploadFileToGitHub(file) {
 	const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${fileName}`, {
 		method: 'PUT',
 		headers: {
-			'Authorization': `token ${GITHUB_CONFIG.testtoken}`,
+			'Authorization': `token ${GITHUB_CONFIG.token}`,
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
