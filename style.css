@@ -322,8 +322,8 @@ textarea {
 .message-item {
 	background: #f8f9fa;
 	border-radius: 10px;
-	padding: 20px;
-	margin-bottom: 20px;
+	padding: 10px;
+	margin-bottom: 10px;
 	border-left: 4px solid #3498db;
 	transition: all 0.3s;
 }
@@ -343,23 +343,23 @@ textarea {
 .message-author {
 	font-weight: bold;
 	color: #2c3e50;
-	font-size: 1.1rem;
+	font-size: 1.0rem;
 }
 
 .message-time {
 	color: #7f8c8d;
-	font-size: 0.9rem;
+	font-size: 0.8rem;
 }
 
 .message-content {
-	margin: 15px 0;
-	line-height: 1.6;
-	color: #2c3e50;
+	margin: 10px 0;
+	line-height: 0.5;
+	color: #3c1a50;
 }
 
 .message-attachment {
 	margin-top: 15px;
-	padding-top: 15px;
+	padding-top: 5px;
 	border-top: 1px dashed #bdc3c7;
 }
 
@@ -434,7 +434,7 @@ textarea {
 }
 
 .github-info {
-	font-size: 0.9rem;
+	font-size: 0.8rem;
 	opacity: 0.8;
 	margin-top: 10px;
 }
