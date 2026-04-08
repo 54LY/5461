@@ -492,8 +492,8 @@ window.onload = loadMessagesFromOnline;
 // ----------------- 留言板相关（Github Token） ----------------- //
 // GitHub配置 - 需要根据实际情况修改
 function getFullToken() {
-	const part1 = 'ghp_6TxJDgtIs6M0pSOL';   // Expires on 2027.1.13 
-	const part2 = 'bsBt1tQjAN2pLR0Otura';   // Expires on 2027.1.13 
+	const part1 = 'ghp_k4uMVQ5ufIwr2f75';   // Expires on 20xx.xx.xx
+	const part2 = '9Get7XF02atlPM2Mlia7';   // Expires on 20xx.xx.xx
 	return part1 + part2;
 }
 
