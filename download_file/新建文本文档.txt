@@ -1,4 +1,4 @@
-ollama serve                     // wsl下必须打开，不关闭界面 
+ollama serve                     // wsl下必须打开，不关闭界面 11
 ollama list
 
 openclaw setup
