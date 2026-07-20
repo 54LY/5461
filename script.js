@@ -506,10 +506,12 @@ const GITHUB_CONFIG = {
 // 全局变量
 let selectedFile = null;
 
-// 初始化
+// 初始化（仅留言板页面）
 document.addEventListener('DOMContentLoaded', function() {
-	setupEventListeners();
-	loadMessages();
+	if (document.getElementById('messageForm')) {
+		setupEventListeners();
+		loadMessages();
+	}
 });
 
 // 设置事件监听器
@@ -783,9 +785,217 @@ function showStatus(message, type = 'success') {
 
 
 
+// ----------------- 文件下载页（file_download.html） ----------------- //
 
+(function() {
+	var adminArea = document.getElementById('adminArea');
+	if (!adminArea) return;  // 不是 file_download 页面，跳过
 
+	var GITHUB_OWNER = '54LY';
+	var GITHUB_REPO = '5461';
+	var UPLOAD_PATH = 'download_file/';
+	var ADMIN_PASSWORD = '1234';
+	var selectedFiles = [];
 
+	var TOKEN = (typeof getFullToken === 'function') ? getFullToken() : '';
+
+	if (sessionStorage.getItem('admin_authenticated_fd') === 'true') {
+		showAdminPanel();
+	}
+	loadFileList();
+
+	window.verifyPassword = function() {
+		var pwdInput = document.getElementById('adminPwd');
+		var pwd = pwdInput.value.trim();
+		if (!pwd) { alert('请输入密码'); return; }
+		if (pwd === ADMIN_PASSWORD) {
+			sessionStorage.setItem('admin_authenticated_fd', 'true');
+			showAdminPanel();
+			pwdInput.value = '';
+		} else {
+			alert('密码错误，请重试！');
+			pwdInput.value = '';
+			pwdInput.focus();
+		}
+	};
+
+	var pwdEl = document.getElementById('adminPwd');
+	if (pwdEl) {
+		pwdEl.addEventListener('keydown', function(e) {
+			if (e.key === 'Enter') verifyPassword();
+		});
+	}
+
+	function showAdminPanel() {
+		document.getElementById('loginForm').style.display = 'none';
+		document.getElementById('adminPanel').style.display = 'block';
+		document.getElementById('uploadArea').style.display = 'block';
+	}
+
+	window.logoutAdmin = function() {
+		sessionStorage.removeItem('admin_authenticated_fd');
+		document.getElementById('loginForm').style.display = 'block';
+		document.getElementById('adminPanel').style.display = 'none';
+		document.getElementById('uploadArea').style.display = 'none';
+		document.getElementById('adminPwd').value = '';
+		selectedFiles = [];
+		updateFileDisplay();
+		hideUploadStatus();
+	};
+
+	// ---- 文件选择 ----
+	var fileInput = document.getElementById('fileInput');
+	var uploadArea = document.getElementById('uploadArea');
+	var uploadBtn = document.getElementById('uploadBtn');
+
+	fileInput.addEventListener('change', function() {
+		handleFiles(this.files);
+	});
+
+	uploadArea.addEventListener('dragover', function(e) {
+		e.preventDefault();
+		uploadArea.classList.add('dragover');
+	});
+
+	uploadArea.addEventListener('dragleave', function(e) {
+		e.preventDefault();
+		uploadArea.classList.remove('dragover');
+	});
+
+	uploadArea.addEventListener('drop', function(e) {
+		e.preventDefault();
+		uploadArea.classList.remove('dragover');
+		handleFiles(e.dataTransfer.files);
+	});
+
+	function handleFiles(files) {
+		for (var i = 0; i < files.length; i++) {
+			selectedFiles.push(files[i]);
+		}
+		updateFileDisplay();
+	}
+
+	function updateFileDisplay() {
+		var display = document.getElementById('selectedFile');
+		if (selectedFiles.length === 0) {
+			display.style.display = 'none';
+			uploadBtn.disabled = true;
+		} else {
+			display.style.display = 'block';
+			var html = '<strong>已选择 ' + selectedFiles.length + ' 个文件：</strong><br>';
+			var totalSize = 0;
+			for (var i = 0; i < selectedFiles.length; i++) {
+				var f = selectedFiles[i];
+				var sizeStr = f.size < 1024 ? f.size + ' B' :
+					f.size < 1048576 ? (f.size / 1024).toFixed(1) + ' KB' :
+					(f.size / 1048576).toFixed(1) + ' MB';
+				html += (i + 1) + '. ' + f.name + ' (' + sizeStr + ')<br>';
+				totalSize += f.size;
+			}
+			var totalStr = totalSize < 1048576 ? (totalSize / 1024).toFixed(1) + ' KB' : (totalSize / 1048576).toFixed(1) + ' MB';
+			html += '<small style="color:#999;">总大小: ' + totalStr + '</small>';
+			display.innerHTML = html;
+			uploadBtn.disabled = false;
+		}
+	}
+
+	function showUploadStatus(msg, type) {
+		var el = document.getElementById('uploadStatus');
+		el.style.display = 'block';
+		el.textContent = msg;
+		el.style.background = type === 'success' ? '#d4edda' : type === 'error' ? '#f8d7da' : '#cce7ff';
+		el.style.color = type === 'success' ? '#155724' : type === 'error' ? '#721c24' : '#004085';
+		el.style.border = '1px solid ' + (type === 'success' ? '#c3e6cb' : type === 'error' ? '#f5c6cb' : '#b3d7ff');
+	}
+
+	function hideUploadStatus() {
+		document.getElementById('uploadStatus').style.display = 'none';
+	}
+
+	function loadFileList() {
+		var container = document.getElementById('downloadList');
+		container.innerHTML = '<div class="status info" style="padding:10px;color:#888;">正在加载文件列表...</div>';
+		var apiUrl = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + UPLOAD_PATH;
+		fetch(apiUrl, { headers: { 'Authorization': 'token ' + TOKEN } })
+		.then(function(resp) {
+			if (!resp.ok) throw new Error('HTTP ' + resp.status);
+			return resp.json();
+		})
+		.then(function(files) {
+			if (!Array.isArray(files) || files.length === 0) {
+				container.innerHTML = '<div class="status info" style="padding:10px;color:#888;">暂无文件</div>';
+				return;
+			}
+			files.sort(function(a, b) { return a.name.localeCompare(b.name, 'zh-CN'); });
+			var html = '';
+			for (var i = 0; i < files.length; i++) {
+				var f = files[i];
+				var rawUrl = 'https://raw.githubusercontent.com/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/main/' + UPLOAD_PATH + encodeURIComponent(f.name);
+				var sizeStr = '';
+				if (f.size) {
+					sizeStr = f.size < 1024 ? ' (' + f.size + ' B)' :
+						f.size < 1048576 ? ' (' + (f.size / 1024).toFixed(1) + ' KB)' :
+						' (' + (f.size / 1048576).toFixed(1) + ' MB)';
+				}
+				html += '<a href="' + rawUrl + '" download>' + (i + 1) + '、' + escapeHtml(f.name) + sizeStr + '</a> ';
+			}
+			html += '<br><br>';
+			container.innerHTML = html;
+		})
+		.catch(function(err) {
+			container.innerHTML = '<div class="status error" style="padding:10px;">加载失败: ' + err.message + '</div>';
+		});
+	}
+
+	window.uploadFiles = async function() {
+		if (selectedFiles.length === 0) return;
+		uploadBtn.disabled = true;
+		uploadBtn.textContent = '上传中...';
+		showUploadStatus('正在上传 ' + selectedFiles.length + ' 个文件...', 'info');
+		var successCount = 0, failCount = 0, errors = [];
+		for (var i = 0; i < selectedFiles.length; i++) {
+			var file = selectedFiles[i];
+			try {
+				var base64Content = await fileToBase64(file);
+				var filePath = UPLOAD_PATH + file.name;
+				var apiUrl = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+				var existingSha = null;
+				try {
+					var checkResp = await fetch(apiUrl, { headers: { 'Authorization': 'token ' + TOKEN } });
+					if (checkResp.ok) { var checkData = await checkResp.json(); existingSha = checkData.sha; }
+				} catch (e) {}
+				var requestBody = { message: '上传文件: ' + file.name, content: base64Content };
+				if (existingSha) requestBody.sha = existingSha;
+				var resp = await fetch(apiUrl, {
+					method: 'PUT',
+					headers: { 'Authorization': 'token ' + TOKEN, 'Content-Type': 'application/json' },
+					body: JSON.stringify(requestBody)
+				});
+				if (resp.ok) { successCount++; }
+				else {
+					var errData = await resp.json().catch(function() { return {}; });
+					failCount++;
+					errors.push(file.name + ': HTTP ' + resp.status + ' ' + (errData.message || resp.statusText));
+				}
+			} catch (err) {
+				failCount++;
+				errors.push(file.name + ': ' + (err.message || '网络错误'));
+			}
+		}
+		var msg = '上传完成：成功 ' + successCount + ' 个';
+		if (failCount > 0) msg += '，失败 ' + failCount + ' 个';
+		showUploadStatus(msg, failCount === 0 ? 'success' : 'error');
+		if (errors.length > 0) console.error('上传错误详情:', errors);
+		if (failCount === 0) {
+			selectedFiles = [];
+			updateFileDisplay();
+			fileInput.value = '';
+			loadFileList();
+		}
+		uploadBtn.disabled = false;
+		uploadBtn.textContent = '上传文件';
+	};
+})();
 
 
 
