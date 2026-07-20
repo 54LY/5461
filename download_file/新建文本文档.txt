@@ -1,0 +1,43 @@
+ollama serve                     // wsl下必须打开，不关闭界面 
+ollama list
+
+openclaw setup
+openclaw configure          // 先选择模型
+openclaw gateway run      // 必须打开，不关闭界面 
+
+openclaw onboard            // 配置选择，进入网页互动 
+
+
+
+openclaw configure --section model
+
+openclaw --version
+openclaw models list
+openclaw configure
+openclaw dashboard
+openclaw tui
+
+
+
+# 非交互式一键全量卸载，无需手动确认
+openclaw uninstall --all --yes --non-interactive
+# 打开配置文件
+ ~/.openclaw/openclaw.json
+
+
+# 清理损坏会话文件（解决恢复失败+卡死会话）
+Remove-Item C:\Users\someone\.openclaw\agents\main\sessions\*
+
+
+
+
+ollama run qwen:7b      // 运行模型
+ollama pull qwen2.5:7b      // 安装模型
+ollama rm qwen2.5:7b
+
+sudo systemctl start ollama
+wsl --list --verbose
+curl -fsSL https://openclaw.ai/install-cli.sh | bash
+powershell -c "irm https://openclaw.ai/install.ps1 | iex"
+openclaw plugins install @openclaw/feishu
+https://open.feishu.cn/app?lang=zh-CN
