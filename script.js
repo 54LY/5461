@@ -794,7 +794,8 @@ function showStatus(message, type = 'success') {
 	var GITHUB_OWNER = '54LY';
 	var GITHUB_REPO = '5461';
 	var UPLOAD_PATH = 'download_file/';
-	var ADMIN_PASSWORD = '1234';
+	var PWD_FILE_PATH = 'admin_pwd.txt';  // 密码文件路径（仓库根目录）
+	var ADMIN_PASSWORD = null;  // 从 GitHub 远程读取，不硬编码
 	var selectedFiles = [];
 
 	var TOKEN = (typeof getFullToken === 'function') ? getFullToken() : '';
@@ -804,10 +805,25 @@ function showStatus(message, type = 'success') {
 	}
 	loadFileList();
 
-	window.verifyPassword = function() {
+	window.verifyPassword = async function() {
 		var pwdInput = document.getElementById('adminPwd');
 		var pwd = pwdInput.value.trim();
 		if (!pwd) { alert('请输入密码'); return; }
+
+		// 如果密码还没从远程加载，先加载
+		if (ADMIN_PASSWORD === null) {
+			var loadBtn = document.querySelector('#loginForm button');
+			if (loadBtn) loadBtn.textContent = '加载中...';
+			try {
+				await loadAdminPassword();
+			} catch (e) {
+				alert('无法连接服务器验证密码，请稍后重试');
+				if (loadBtn) loadBtn.textContent = '验证';
+				return;
+			}
+			if (loadBtn) loadBtn.textContent = '验证';
+		}
+
 		if (pwd === ADMIN_PASSWORD) {
 			sessionStorage.setItem('admin_authenticated_fd', 'true');
 			showAdminPanel();
@@ -818,6 +834,18 @@ function showStatus(message, type = 'success') {
 			pwdInput.focus();
 		}
 	};
+
+	// 从 GitHub 仓库读取密码文件
+	async function loadAdminPassword() {
+		var apiUrl = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + PWD_FILE_PATH;
+		var resp = await fetch(apiUrl, { headers: { 'Authorization': 'token ' + TOKEN } });
+		if (!resp.ok) throw new Error('HTTP ' + resp.status);
+		var data = await resp.json();
+		// GitHub API 返回的 content 是 Base64 编码的
+		var base64Content = data.content.replace(/\s/g, '');
+		var decoded = atob(base64Content);
+		ADMIN_PASSWORD = decoded.trim();
+	}
 
 	var pwdEl = document.getElementById('adminPwd');
 	if (pwdEl) {
@@ -830,6 +858,10 @@ function showStatus(message, type = 'success') {
 		document.getElementById('loginForm').style.display = 'none';
 		document.getElementById('adminPanel').style.display = 'block';
 		document.getElementById('uploadArea').style.display = 'block';
+		// 登录后重新渲染文件列表以显示删除按钮
+		if (window._fileCache && Object.keys(window._fileCache).length > 0) {
+			loadFileList();
+		}
 	}
 
 	window.logoutAdmin = function() {
@@ -841,6 +873,8 @@ function showStatus(message, type = 'success') {
 		selectedFiles = [];
 		updateFileDisplay();
 		hideUploadStatus();
+		// 退出管理后重新渲染以隐藏删除按钮
+		loadFileList();
 	};
 
 	// ---- 文件选择 ----
@@ -916,6 +950,8 @@ function showStatus(message, type = 'success') {
 		var container = document.getElementById('downloadList');
 		container.innerHTML = '<div class="status info" style="padding:10px;color:#888;">正在加载文件列表...</div>';
 		var apiUrl = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + UPLOAD_PATH;
+		// 缓存所有文件的 sha 信息供删除使用
+		window._fileCache = {};
 		fetch(apiUrl, { headers: { 'Authorization': 'token ' + TOKEN } })
 		.then(function(resp) {
 			if (!resp.ok) throw new Error('HTTP ' + resp.status);
@@ -927,25 +963,83 @@ function showStatus(message, type = 'success') {
 				return;
 			}
 			files.sort(function(a, b) { return a.name.localeCompare(b.name, 'zh-CN'); });
+			// 缓存 sha
+			for (var i = 0; i < files.length; i++) {
+				window._fileCache[files[i].name] = files[i].sha;
+			}
+			var isAdmin = sessionStorage.getItem('admin_authenticated_fd') === 'true';
 			var html = '';
 			for (var i = 0; i < files.length; i++) {
 				var f = files[i];
-				var rawUrl = 'https://raw.githubusercontent.com/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/main/' + UPLOAD_PATH + encodeURIComponent(f.name);
+				var rawUrl = 'https://raw.githubusercontent.com/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/main/' + UPLOAD_PATH + encodeURIComponent(f.name) + '?t=' + Date.now();
 				var sizeStr = '';
 				if (f.size) {
 					sizeStr = f.size < 1024 ? ' (' + f.size + ' B)' :
 						f.size < 1048576 ? ' (' + (f.size / 1024).toFixed(1) + ' KB)' :
 						' (' + (f.size / 1048576).toFixed(1) + ' MB)';
 				}
-				html += '<a href="' + rawUrl + '" download>' + (i + 1) + '、' + escapeHtml(f.name) + sizeStr + '</a> ';
+				// 文件行：链接 + （管理员可见的）删除按钮
+				html += '<span class="file-row">';
+				html += '<a href="' + rawUrl + '" download>' + (i + 1) + '、' + escapeHtml(f.name) + sizeStr + '</a>';
+				if (isAdmin) {
+					html += ' <button class="btn-delete-file" data-filename="' + escapeHtml(f.name).replace(/"/g, '&quot;') + '" title="删除文件">🗑</button>';
+				}
+				html += '</span> ';
 			}
 			html += '<br><br>';
 			container.innerHTML = html;
+			// 使用事件委托绑定删除按钮
+			container.onclick = function(e) {
+				var btn = e.target;
+				if (btn.classList && btn.classList.contains('btn-delete-file')) {
+					var fname = btn.getAttribute('data-filename');
+					if (fname) deleteFile(fname);
+				}
+			};
 		})
 		.catch(function(err) {
 			container.innerHTML = '<div class="status error" style="padding:10px;">加载失败: ' + err.message + '</div>';
 		});
 	}
+
+	// ---- 删除文件 ----
+	window.deleteFile = async function(filename) {
+		if (!confirm('确定要删除 "' + filename + '" 吗？此操作不可撤销！')) return;
+
+		var sha = window._fileCache && window._fileCache[filename];
+		if (!sha) {
+			alert('无法获取文件信息，请刷新页面后重试');
+			return;
+		}
+
+		var filePath = UPLOAD_PATH + filename;
+		var apiUrl = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/' + filePath;
+
+		try {
+			var resp = await fetch(apiUrl, {
+				method: 'DELETE',
+				headers: {
+					'Authorization': 'token ' + TOKEN,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					message: '删除文件: ' + filename,
+					sha: sha
+				})
+			});
+
+			if (resp.ok) {
+				showUploadStatus('文件 "' + filename + '" 已删除', 'success');
+				// 延迟刷新列表（GitHub API 有缓存延迟）
+				setTimeout(function() { loadFileList(); }, 1500);
+			} else {
+				var errData = await resp.json().catch(function() { return {}; });
+				showUploadStatus('删除失败: ' + (errData.message || resp.statusText), 'error');
+			}
+		} catch (err) {
+			showUploadStatus('删除失败: ' + (err.message || '网络错误'), 'error');
+		}
+	};
 
 	window.uploadFiles = async function() {
 		if (selectedFiles.length === 0) return;
