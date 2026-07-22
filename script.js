@@ -793,7 +793,7 @@ function showStatus(message, type = 'success') {
 
 	var GITHUB_OWNER = '54LY';
 	var GITHUB_REPO = '5461';
-	var UPLOAD_PATH = 'download_file/';
+	var UPLOAD_PATH = 'upload_file/';
 	var PWD_FILE_PATH = 'admin_pwd.txt';  // 密码文件路径（仓库根目录）
 	var ADMIN_PASSWORD = null;  // 从 GitHub 远程读取，不硬编码
 	var selectedFiles = [];
