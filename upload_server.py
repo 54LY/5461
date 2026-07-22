@@ -2,7 +2,7 @@
 文件上传服务器
 运行方式: python upload_server.py
 默认端口: 8888
-上传目录: download_file/
+上传目录: upload_file/
 """
 import os
 import sys
@@ -15,7 +15,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).parent.resolve()
 os.chdir(str(SCRIPT_DIR))
 
-UPLOAD_DIR = SCRIPT_DIR / 'download_file'
+UPLOAD_DIR = SCRIPT_DIR / 'upload_file'
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 

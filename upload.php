@@ -1,13 +1,13 @@
 <?php
 /**
  * 文件上传处理脚本
- * 接收上传的文件，保存到 download_file 目录
+ * 接收上传的文件，保存到 upload_file 目录
  */
 
 header('Content-Type: application/json; charset=utf-8');
 
 // 上传目录（相对于本脚本）
-$uploadDir = __DIR__ . '/download_file/';
+$uploadDir = __DIR__ . '/upload_file/';
 
 // 确保上传目录存在
 if (!is_dir($uploadDir)) {
